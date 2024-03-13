@@ -38,4 +38,4 @@ não um contato favorito. </li>
 
 <h2>Extra: automações</h2>
 <p>Desenvolvi um script em Python para gerar dados de teste de forma aleatória e automática e, após isso, realizar o insert na tabela do BD usando a biblioteca <b>Psycopg2</b> para fazer a conexão com o PostgreSQL.</p>
-<p>O script pode ser encontrado em ```script.py```</p>
+<p>O script pode ser encontrado em <i>script.py</i></p>
