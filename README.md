@@ -25,11 +25,11 @@ não um contato favorito. </li>
 <b>Tabela:</b>
 <br>
 <img src="./assets/tabela.png">
-<br>
+<br><br>
 <b>Descrição da tabela:</b>
 <br>
 <img src="./assets/tabelaDesc.png">
-<br>
+<br><br>
 <b>Registros:</b>
 <br>
 <img src="./assets/registros.png">
