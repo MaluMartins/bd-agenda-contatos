@@ -1,5 +1,8 @@
 import random
 import string
+import psycopg2
+
+registros = []
 
 def gerar_nome():
     nomes = ["João", "Maria", "José", "Ana", "Pedro", "Mariana", "Carlos", "Fernanda", "Paulo", "Juliana"]
@@ -21,19 +24,52 @@ def gerar_grupo():
     grupo = random.choice(grupos)
     return grupo
 
-# Gerar 50 registros de nome, email e telefone
-registros = []
-for _ in range(38):
-    nome = gerar_nome()
-    email = gerar_email(nome)
-    telefone = gerar_telefone()
-    grupo = gerar_grupo()
+def conectar_banco():
+    try:
+        connection = psycopg2.connect(
+            dbname="agenda",
+            user="postgres",
+            password="dbadmin",
+            host="localhost",
+            port="5432"
+        )
+        print("Conexão estabelecida com sucesso!")
+        return connection
+    except psycopg2.Error as e:
+        print("Erro ao conectar ao banco de dados:", e)
+        return None
 
-    nome_com_aspas = f"'{nome}'"
-    email_com_aspas = f"'{email}'"
-    grupo_com_aspas = f"'{grupo}'"
-    registros.append((nome_com_aspas, email_com_aspas, telefone, grupo_com_aspas))
+def inserir_dados(connection, dados):
+    try:
+        cursor = connection.cursor()
 
-lista_registros = ', '.join([', '.join(registro) for registro in registros])
+        query = f"INSERT INTO contatos (nome, email, telefone, grupo) VALUES ({dados[0]}, {dados[1]}, {dados[2]}, {dados[3]})"
+        
+        cursor.execute(query)
 
-print(lista_registros)
+        connection.commit()
+        print("Dados inseridos com sucesso!")
+
+    except psycopg2.Error as e:
+        connection.rollback()  
+        print("Erro ao inserir dados:", e)
+
+if __name__ == "__main__":
+    connection = conectar_banco()
+
+    if connection is not None:
+        for _ in range(10):
+            nome = gerar_nome()
+            email = gerar_email(nome)
+            telefone = gerar_telefone()
+            grupo = gerar_grupo()
+            nome = f"'{nome}'"
+            email = f"'{email}'"
+            telefone = f"'{telefone}'"
+            grupo = f"'{grupo}'"
+
+            dados_para_inserir = [nome, email, telefone, grupo]
+
+            inserir_dados(connection, dados_para_inserir)
+
+        connection.close()
